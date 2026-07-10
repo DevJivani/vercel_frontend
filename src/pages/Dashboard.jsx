@@ -21,15 +21,17 @@ const Dashboard = () => {
     }
   }, [user, navigate]);
 
+  const getApiBaseUrl = () => import.meta.env.VITE_API_URL.replace(/\/$/, '');
+  
   const fetchRooms = async () => {
-    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/rooms/user/${user._id}`);
+    const { data } = await axios.get(`${getApiBaseUrl()}/api/rooms/user/${user._id}`);
     setRooms(data);
   };
 
   const handleCreateRoom = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/rooms/create`, { name: roomName, userId: user._id });
+      const { data } = await axios.post(`${getApiBaseUrl()}/api/rooms/create`, { name: roomName, userId: user._id });
       navigate(`/room/${data._id}`);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to create room');
@@ -39,7 +41,7 @@ const Dashboard = () => {
   const handleJoinRoom = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/rooms/join`, { code: joinCode, userId: user._id });
+      const { data } = await axios.post(`${getApiBaseUrl()}/api/rooms/join`, { code: joinCode, userId: user._id });
       navigate(`/room/${data._id}`);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to join room');

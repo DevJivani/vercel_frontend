@@ -55,13 +55,15 @@ const ChatRoom = () => {
     '✋', '👐', '👋', '👏', '🙌', '🤝', '🙏'
   ];
 
+  const getApiBaseUrl = () => import.meta.env.VITE_API_URL.replace(/\/$/, '');
+  
   useEffect(() => {
     if (!user) {
       navigate('/');
       return;
     }
 
-    socketRef.current = io(import.meta.env.VITE_API_URL);
+    socketRef.current = io(getApiBaseUrl());
     
     socketRef.current.emit('join', {
       roomId: roomId,
@@ -133,7 +135,7 @@ const ChatRoom = () => {
   useEffect(() => {
     const fetchRoom = async () => {
       try {
-        const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/rooms/${roomId}`);
+        const { data } = await axios.get(`${getApiBaseUrl()}/api/rooms/${roomId}`);
         setRoom(data);
       } catch (e) {
         console.error(e);
@@ -184,7 +186,7 @@ const ChatRoom = () => {
         formData.append('file', audioBlob, 'voice-message.webm');
         
         try {
-          const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/upload`, formData, {
+          const response = await axios.post(`${getApiBaseUrl()}/api/upload`, formData, {
             headers: { 'Content-Type': 'multipart/form-data' }
           });
 
@@ -256,7 +258,7 @@ const ChatRoom = () => {
     formData.append('file', file);
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/upload`, formData, {
+      const response = await axios.post(`${getApiBaseUrl()}/api/upload`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
